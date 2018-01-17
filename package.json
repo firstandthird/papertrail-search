@@ -1,0 +1,34 @@
+{
+  "name": "omni-papertrail",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Chrome extension to quickly access to your Papertrail saved searches from the address bar",
+  "main": "extension/background/background.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:firstandthird/omni-papertrail.git"
+  },
+  "keywords": [
+    "papertrail",
+    "search"
+  ],
+  "author": "First+Third <code@firstandthird.com> (http://firstandthird.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/firstandthird/omni-papertrail/issues"
+  },
+  "homepage": "https://github.com/firstandthird/omni-papertrail",
+  "devDependencies": {
+    "eslint-config-firstandthird": "4.3.0",
+    "eslint-plugin-import": "2.8.0"
+  },
+  "eslintConfig": {
+    "extends": "firstandthird",
+    "env": {
+      "browser": true
+    },
+    "globals": {
+      "chrome": true
+    }
+  }
+}

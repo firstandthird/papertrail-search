@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Omni Papertrail options</title>
+  <style>
+    #status {
+      color: darkgreen;
+    }
+    input {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <p>
+    <label for="token">Papertrail API token:</label>
+    <input type="text" name="token" id="token" value="" placeholder="Your token here">
+  </p>
+
+  <p>
+    <a href="https://papertrailapp.com/account/profile" target="_blank" title="Get your Papertrail API Token">Get your Papertrail API Token</a>
+  </p>
+
+
+  <p>
+    <button type="button" id="save">Save</button>
+    <span id="status"></span>
+  </p>
+
+  <script src="options.js"></script>
+
+</body>
+</html>

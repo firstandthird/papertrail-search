@@ -1,0 +1,33 @@
+{
+  "name": "Omni Papertrail",
+  "description": "Chrome extension to quickly access to your Papertrail saved searches from the address bar",
+  "manifest_version": 2,
+  "version": "1.0.0",
+  "short_name": "Search Papertrail:",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "homepage_url": "https://github.com/firstandthird/omni-papertrail",
+  "author": "First+Third <code@firstandthird.com> (http://firstandthird.com/)",
+  "offline_enabled": false,
+  "permissions": [
+    "tabs",
+    "storage",
+    "contentSettings",
+    "https://papertrailapp.com/api/*"
+  ],
+  "omnibox": {
+    "keyword": "pt"
+  },
+  "background": {
+    "scripts": [
+      "src/background/background.js"
+    ]
+  },
+  "options_ui": {
+    "page": "src/options/options.html",
+    "chrome_style": true
+  }
+}
