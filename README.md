@@ -1,4 +1,4 @@
-# Papertrail Searches Searches Chrome Extension
+# Omni Papertrail Chrome Extension
 
 Chrome extension to quickly access your Papertrail saved searches from the address bar.
 
