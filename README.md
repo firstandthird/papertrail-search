@@ -1,11 +1,11 @@
-# Omni Papertrail Chrome Extension
+# Papertrail Saved Searches Chrome Extension
 
 Chrome extension to quickly access your Papertrail saved searches from the address bar.
 
 ## Installation
 
 - Open Google Chrome and navigate to `chrome://extensions`.
-- Drop `omni-papertrail.crx` into window. Click `Add extension` when prompted.
+- Drop `papertrail-saved-searches.crx` into window. Click `Add extension` when prompted.
 - [Get your Papertrail API token](https://papertrailapp.com/account/profile).
 - Go to extension options available from extension toolbar icon context menu.
 - Paste your token and save changes.
@@ -18,7 +18,7 @@ Type `pt` + `[Tab]` and search through your Papertrail saved searches.
 
 ### MIT License
 
-Copyright (c) 2017 First+Third
+Copyright (c) 2018 First+Third
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

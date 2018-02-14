@@ -6,7 +6,7 @@
   "main": "extension/background/background.js",
   "repository": {
     "type": "git",
-    "url": "git@github.com:firstandthird/omni-papertrail.git"
+    "url": "git@github.com:firstandthird/papertrail-saved-searches.git"
   },
   "keywords": [
     "papertrail",
@@ -15,9 +15,9 @@
   "author": "First+Third <code@firstandthird.com> (http://firstandthird.com/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/firstandthird/omni-papertrail/issues"
+    "url": "https://github.com/firstandthird/papertrail-saved-searches/issues"
   },
-  "homepage": "https://github.com/firstandthird/omni-papertrail",
+  "homepage": "https://github.com/firstandthird/papertrail-saved-searches",
   "devDependencies": {
     "eslint-config-firstandthird": "4.3.0",
     "eslint-plugin-import": "2.8.0"
