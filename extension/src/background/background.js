@@ -98,10 +98,20 @@ chrome.omnibox.onInputEntered.addListener(
  * @returns
  */
 function highlightResults(text, results) {
-  const searchTextRegExp = new RegExp(text, 'i');
+  const words = text.trim().split(' ').join('|');
+  const searchTextRegExp = new RegExp(`(?:${words})`, 'gi');
 
   return results
-    .filter(suggestion => searchTextRegExp.test(suggestion.description))
+    .filter(suggestion => {
+      const matches = suggestion.description.match(searchTextRegExp);
+
+      if (matches) {
+        suggestion.matches = matches.length;
+      }
+
+      return !!matches;
+    })
+    .sort((a, b) => b.matches - a.matches) // Sort by number of matches
     .slice(0, MAX_SUGGESTIONS)
     .map(res => {
       const match = res.description.replace(searchTextRegExp, `<match>$&</match>`);
