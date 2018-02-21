@@ -1,6 +1,6 @@
 {
-  "name": "Papertrail Saved Searches",
-  "description": "Chrome extension to quickly access to your Papertrail saved searches from the address bar",
+  "name": "Papertrail Search",
+  "description": "Chrome extension to quickly access your Papertrail saved searches and systems from the address bar",
   "manifest_version": 2,
   "version": "1.0.0",
   "short_name": "Search Papertrail:",
@@ -9,7 +9,7 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "homepage_url": "https://github.com/firstandthird/papertrail-saved-searches",
+  "homepage_url": "https://github.com/firstandthird/papertrail-search",
   "author": "First+Third <code@firstandthird.com> (http://firstandthird.com/)",
   "offline_enabled": false,
   "permissions": [

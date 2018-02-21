@@ -1,7 +1,7 @@
 /**
  * Default config
  */
-const API_URL = 'https://papertrailapp.com/api/v1/searches.json';
+const API_URL = 'https://papertrailapp.com/api/v1';
 const TOKEN_NAME = 'pt_personal_token';
 const MAX_SUGGESTIONS = 10;
 
@@ -19,15 +19,28 @@ const parameters = {
 let suggestionsCache = [];
 
 /**
- * Filters a papertrails results response to match Chrome suggestions object
+ * Filters a papertrail search result response to match Chrome suggestions object
  *
- * @param {array} data
+ * @param {Object} data
  * @returns
  */
-function formatAsSuggestion(data) {
+function formatSearchAsSuggestion(data) {
   return {
     content: data._links.html_search.href,
     description: `[${data.group.name}] ${data.name} -`
+  }
+}
+
+/**
+ * Filters a papertrail systems search result response to match Chrome suggestions object
+ *
+ * @param {Object} data
+ * @returns
+ */
+function formatSystemAsSuggestion(data) {
+  return {
+    content: data._links.html.href,
+    description: `${data.name} -`
   }
 }
 
@@ -55,7 +68,7 @@ chrome.omnibox.onInputStarted.addListener(
     }, item => {
       if (item[TOKEN_NAME]) {
         parameters.headers.set('X-Papertrail-Token', item[TOKEN_NAME]);
-        search(parameters).then(data => suggestionsCache = data);
+        search();
       }
     });
   }
@@ -65,16 +78,15 @@ chrome.omnibox.onInputChanged.addListener(
   (text, suggest) => {
     chrome.storage.sync.get({
       [TOKEN_NAME]: ''
-    }, item => {
+    }, async item => {
       if (suggestionsCache.length) {
         suggest(highlightResults(text, suggestionsCache));
       } else {
         if (item[TOKEN_NAME]) {
           parameters.headers.set('X-Papertrail-Token', item[TOKEN_NAME]);
-          search(parameters).then(data => {
-            suggestionsCache = data;
-            suggest(highlightResults(text, data));
-          });
+
+          const data = await search();
+          suggest(highlightResults(text, data));
         }
       }
     });
@@ -128,11 +140,17 @@ function highlightResults(text, results) {
  * @param {any} params
  * @returns
  */
-async function search(params) {
+async function search() {
   try {
-    const response = await fetch(API_URL, params);
-    const data = await response.json();
-    return data.map(formatAsSuggestion);
+    const searchesResponse = await fetch(`${API_URL}/searches.json`, parameters);
+    const systemsResponse = await fetch(`${API_URL}/systems.json`, parameters);
+
+    const searchesData = await searchesResponse.json();
+    const systemsData = await systemsResponse.json();
+
+    suggestionsCache = searchesData.map(formatSearchAsSuggestion).concat(systemsData.map(formatSystemAsSuggestion));
+
+    return suggestionsCache;
   }
   catch (e) {
     throw e;
