@@ -2,7 +2,7 @@
   "name": "papertrail-search",
   "version": "1.0.0",
   "private": true,
-  "description": "Chrome extension to quickly access to your Papertrail saved searches from the address bar",
+  "description": "Chrome extension to quickly access your Papertrail saved searches and systems from the address bar",
   "main": "extension/background/background.js",
   "repository": {
     "type": "git",

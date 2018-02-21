@@ -5,7 +5,7 @@ Chrome extension to quickly access your Papertrail saved searches and systems fr
 ## Installation
 
 - Open Google Chrome and navigate to `chrome://extensions`.
-- Drop `papertrail-search.crx` into window. Click `Add extension` when prompted.
+- Drop `extension.crx` into window. Click `Add extension` when prompted.
 - [Get your Papertrail API token](https://papertrailapp.com/account/profile).
 - Go to extension options available from extension toolbar icon context menu.
 - Paste your token and save changes.

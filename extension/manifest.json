@@ -1,6 +1,6 @@
 {
   "name": "Papertrail Search",
-  "description": "Chrome extension to quickly access to your Papertrail saved searches and systems from the address bar",
+  "description": "Chrome extension to quickly access your Papertrail saved searches and systems from the address bar",
   "manifest_version": 2,
   "version": "1.0.0",
   "short_name": "Search Papertrail:",
