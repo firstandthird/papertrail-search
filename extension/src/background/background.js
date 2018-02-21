@@ -52,10 +52,10 @@ chrome.omnibox.onInputStarted.addListener(
   () => {
     chrome.storage.sync.get({
       [TOKEN_NAME]: ''
-    }, item => {
+    }, async item => {
       if (item[TOKEN_NAME]) {
         parameters.headers.set('X-Papertrail-Token', item[TOKEN_NAME]);
-        search(parameters).then(data => suggestionsCache = data);
+        suggestionsCache = await search(parameters);
       }
     });
   }
@@ -65,16 +65,14 @@ chrome.omnibox.onInputChanged.addListener(
   (text, suggest) => {
     chrome.storage.sync.get({
       [TOKEN_NAME]: ''
-    }, item => {
+    }, async item => {
       if (suggestionsCache.length) {
         suggest(highlightResults(text, suggestionsCache));
       } else {
         if (item[TOKEN_NAME]) {
           parameters.headers.set('X-Papertrail-Token', item[TOKEN_NAME]);
-          search(parameters).then(data => {
-            suggestionsCache = data;
-            suggest(highlightResults(text, data));
-          });
+          suggestionsCache = await search(parameters);
+          suggest(highlightResults(text, suggestionsCache));
         }
       }
     });
@@ -120,8 +118,7 @@ function highlightResults(text, results) {
  */
 async function search(params) {
   try {
-    const response = await fetch(API_URL, params);
-    const data = await response.json();
+    const data = await (await fetch(API_URL, params)).json();
     return data.map(formatAsSuggestion);
   }
   catch (e) {
