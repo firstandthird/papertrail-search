@@ -2,6 +2,7 @@
  * Default config
  */
 const API_URL = 'https://papertrailapp.com/api/v1';
+const SEARCH_URL = 'https://papertrailapp.com/events?q=';
 const TOKEN_NAME = 'pt_personal_token';
 const MAX_SUGGESTIONS = 10;
 
@@ -28,7 +29,7 @@ function formatSearchAsSuggestion(data) {
   return {
     content: data._links.html_search.href,
     description: `[${data.group.name}] ${data.name} -`
-  }
+  };
 }
 
 /**
@@ -41,21 +42,81 @@ function formatSystemAsSuggestion(data) {
   return {
     content: data._links.html.href,
     description: `${data.name} -`
-  }
+  };
 }
 
 /**
- * Navigates to given URL
+ * Navigates to the given URL, if not a URL, goes to a papertrail search with
+ * the given string as search term
  *
- * @param {string} url
+ * @param {string} searchString
  */
-function navigate(url) {
+function navigate(searchString) {
+  let url = searchString;
+
   try {
     new URL(url);
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.update(tabs[0].id, { url: url });
+  } catch (e) {
+    url = encodeURI(`${SEARCH_URL}${url}`);
+  }
+
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.update(tabs[0].id, { url: encodeURI(url) });
+  });
+}
+
+/**
+ * Highlights matched text
+ *
+ * @param {string} text
+ * @param {array} results
+ * @returns
+ */
+function highlightResults(text, results) {
+  const words = text.trim().split(' ').join('|');
+  const searchTextRegExp = new RegExp(`(?:${words})`, 'gi');
+
+  return results
+    .filter(suggestion => {
+      const matches = suggestion.description.match(searchTextRegExp);
+
+      if (matches) {
+        suggestion.matches = matches.length;
+      }
+
+      return !!matches;
+    })
+    .sort((a, b) => b.matches - a.matches) // Sort by number of matches
+    .slice(0, MAX_SUGGESTIONS)
+    .map(res => {
+      const match = res.description.replace(searchTextRegExp, '<match>$&</match>');
+      return {
+        content: res.content,
+        description: `<dim>${match}</dim> <url>${res.content}</url>`
+      };
     });
-  } catch (e) { }
+}
+
+/**
+ * Fetches Papertrail saved searches
+ *
+ * @param {any} params
+ * @returns
+ */
+async function search() {
+  try {
+    const searchesResponse = await fetch(`${API_URL}/searches.json`, parameters);
+    const systemsResponse = await fetch(`${API_URL}/systems.json`, parameters);
+
+    const searchesData = await searchesResponse.json();
+    const systemsData = await systemsResponse.json();
+
+    suggestionsCache = searchesData.map(formatSearchAsSuggestion).concat(systemsData.map(formatSystemAsSuggestion));
+
+    return suggestionsCache;
+  } catch (e) {
+    throw e;
+  }
 }
 
 /*
@@ -101,58 +162,3 @@ chrome.omnibox.onInputEntered.addListener(
     navigate(url);
   }
 );
-
-/**
- * Highlights matched text
- *
- * @param {string} text
- * @param {array} results
- * @returns
- */
-function highlightResults(text, results) {
-  const words = text.trim().split(' ').join('|');
-  const searchTextRegExp = new RegExp(`(?:${words})`, 'gi');
-
-  return results
-    .filter(suggestion => {
-      const matches = suggestion.description.match(searchTextRegExp);
-
-      if (matches) {
-        suggestion.matches = matches.length;
-      }
-
-      return !!matches;
-    })
-    .sort((a, b) => b.matches - a.matches) // Sort by number of matches
-    .slice(0, MAX_SUGGESTIONS)
-    .map(res => {
-      const match = res.description.replace(searchTextRegExp, `<match>$&</match>`);
-      return {
-        content: res.content,
-        description: `<dim>${match}</dim> <url>${res.content}</url>`
-      }
-    });
-}
-
-/**
- * Fetches Papertrail saved searches
- *
- * @param {any} params
- * @returns
- */
-async function search() {
-  try {
-    const searchesResponse = await fetch(`${API_URL}/searches.json`, parameters);
-    const systemsResponse = await fetch(`${API_URL}/systems.json`, parameters);
-
-    const searchesData = await searchesResponse.json();
-    const systemsData = await systemsResponse.json();
-
-    suggestionsCache = searchesData.map(formatSearchAsSuggestion).concat(systemsData.map(formatSystemAsSuggestion));
-
-    return suggestionsCache;
-  }
-  catch (e) {
-    throw e;
-  }
-}
